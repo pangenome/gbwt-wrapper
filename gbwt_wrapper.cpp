@@ -1,22 +1,36 @@
-// #include"/usr/local/include/gbwt/dynamic_gbwt.h"
+// #include"/usr/local/include/gbwt/utils.h"
+#include"/usr/local/include/gbwt/dynamic_gbwt.h"
 #include"gbwt_wrapper.h"
 
+void* newDynamicGBWT(void) {
 
-CDynamicGBWT newDynamicGBWT(void) {
-    return reinterpret_cast<void*>(new DynamicGBWT());
+        gbwt::DynamicGBWT *gbwt =  new gbwt::DynamicGBWT;
+        return (void *)gbwt  ;
 }
 
-void  deleteDynamicGBWT(CDynamicGBWT dynGBWT) {
-         delete reinterpret_cast<CDynamicGBWT*>(dynGBWT);
+void  deleteDynamicGBWT(void * dynGBWT) {
+
+
+          gbwt::DynamicGBWT* gbwt = (gbwt::DynamicGBWT *) dynGBWT;
+        delete  gbwt;
 
 }
 
-void insertGBWTSequence (CDynamicGBWT  dynGBWT, const text_type& text, bool has_both_orientations = false, size_type sample_interval = SAMPLE_INTERVAL)
-{
-    return reinterpret_cast<CDynamicGBWT*>(fred)->insert(text, has_both_orientations, sample_interval );
+
+void insertGBWTSequence (void *  dynGBWT, text_type& text) {
+
+
+        gbwt::DynamicGBWT* bgwt = (gbwt::DynamicGBWT *) dynGBWT;
+        bgwt->insert(text);
 }
 
-int main(void){
+
+
+
+int main (void)  {
         printf("Hello world");
+        void* the_gbwt = newDynamicGBWT();
+        deleteDynamicGBWT(the_gbwt);
         return 0;
+
 }

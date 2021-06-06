@@ -1,0 +1,2 @@
+
+gcc -o libfiledyn.so -Wl,--whole-archive libsdsl.a libgbwt.a -Wl,--no-whole-archive -shared gbwt_wrapper.o

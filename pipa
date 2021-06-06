@@ -1,1 +1,0 @@
-  g++ gbwt_wrapper.cpp  libgbwt.a libsdsl.a -pthread -fopenmp

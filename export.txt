@@ -1,0 +1,16 @@
+{
+global:
+  newDynamicGBWT;
+  DynamicGBWT_to_GBWT;
+  deleteGBWT;
+  deleteDynamicGBWT;
+  insertGBWTSequence;
+  total_path_length;
+  number_of_paths;
+  alphabet_size;
+  number_of_samples;
+  has_empty_index ;
+  is_index_bidirectional;
+  number_of_gwt_runs;
+local: *;
+}

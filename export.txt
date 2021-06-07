@@ -1,6 +1,10 @@
-GBWT_WRAPPER_1.0{
+{
 global:
-  newDynamicGBWT; deleteGBWT;
-
+ DynamicGBWT_to_GBWT;
+ newDynamicGBWT;
+ deleteGBWT;
+ deleteDynamicGBWT;
+ insertGBWTSequence;
+ insertGBWTSequence;
 local: *;
 };

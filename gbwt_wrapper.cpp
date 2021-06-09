@@ -1,7 +1,5 @@
-// #include"/usr/local/include/gbwt/utils.h"
-#include"/usr/local/include/gbwt/dynamic_gbwt.h"
 #include"gbwt_wrapper.h"
-#include"/usr/local/include/gbwt/gbwt.h"
+
 
 void* newDynamicGBWT(void) {
 
@@ -18,14 +16,48 @@ void  deleteDynamicGBWT(void * dynGBWT) {
 }
 
 
+
+
+text_type stringToText (void* text)
+{
+        int i;
+        int string_end = 0;
+        int string_index =0;
+        text_type  str_vector ;
+        int* tmp =   (int*) text  ;
+        str_vector.width(8);
+        while(string_end == 0) {
+                if (tmp[string_index] == NULL) {
+                        string_end=1;
+                }
+                else {
+                        string_index++;
+                }
+        }
+
+        str_vector.resize(string_index + 1) ;
+
+        for (i=0; i<=string_index; i++)
+        {
+        str_vector[i] = tmp [i];
+        }
+        return str_vector;
+}
+
+
 void insertGBWTSequence (void *  dynGBWT, text_type& text) {
-
-
         gbwt::DynamicGBWT* bgwt = (gbwt::DynamicGBWT *) dynGBWT;
         bgwt->insert(text);
 }
 
 
+void  insertSequence (void* dynGBWT, void* text) {
+        text_type s =  stringToText(text);
+        insertGBWTSequence(dynGBWT, s);
+}
+
+
+// void insertSequence(void*, *void text);
 
 
 void* DynamicGBWT_to_GBWT(void* dynGBWT) {

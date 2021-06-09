@@ -4,7 +4,6 @@ global:
  newDynamicGBWT;
  deleteGBWT;
  deleteDynamicGBWT;
- insertGBWTSequence;
- insertGBWTSequence;
+ insertSequence;
 local: *;
 };

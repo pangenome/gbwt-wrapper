@@ -1,9 +1,7 @@
-#include"/usr/local/include/gbwt/utils.h"
+#include "/usr/local/include/sdsl/int_vector.hpp"
 #include"/usr/local/include/gbwt/dynamic_gbwt.h"
 #include"/usr/local/include/gbwt/gbwt.h"
 
-#include"/usr/local/include/gbwt/algorithms.h"
-// typedef void * CDynamicGBWT;
 
 typedef sdsl::int_vector<0> text_type;
 typedef std::uint64_t size_type;
@@ -25,31 +23,25 @@ typedef std::pair<size_type, size_type>   sample_type;  // (i, DA[i]) within a r
 #endif
 
 extern "C" void* newDynamicGBWT(void);
-
 extern "C" void* DynamicGBWT_to_GBWT(void* dynGBWT);
-
-
 extern "C" void deleteGBWT(void* GBWT);
-extern "C" void  deleteDynamicGBWT(void* dynGBWT);
+extern "C" void deleteDynamicGBWT(void* dynGBWT);
 
-//methods
-extern "C" void insertGBWTSequence(void*, text_type& text);
+text_type stringToText (void* text);
+
+extern "C" void insertGBWTSequence(void* dynGBWT, text_type& text);
+extern "C" void insertSequence(void* dynGBWT, void* text);
+
 // GBWT(const DynamicGBWT& source)
-
-
-
-//GBWT methods
+// GBWT methods
 
 extern "C" size_type total_path_length(void* GBWT);
-
 extern "C" size_type number_of_paths(void* GBWT);
 extern "C" size_type alphabet_size(void* GBWT);
-
 extern "C" size_type number_of_samples(void* GBWT);
-
 extern "C" size_type effective_alpahbet_size(void* GBWT);
-extern "C" bool has_empty_index (void* GBWT);
 
+extern "C" bool has_empty_index (void* GBWT);
 extern "C" bool is_index_bidirectional(void* GBWT);
 extern "C" std::pair<size_type, size_type>   number_of_gwt_runs   (void* GBWT);
 

@@ -1,0 +1,5 @@
+#!bin/env sh
+
+gcc -c -fPIC gbwt_wrapper.cpp; g++ -o libgbwtwrapper.so -Wl,--whole-archive libsdsl.a libgbwt.a -Wl,--no-whole-archive -shared gbwt_wrapper.o  -pthread -fopenmp
+
+

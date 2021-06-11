@@ -16,8 +16,6 @@ void  deleteDynamicGBWT(void * dynGBWT) {
 }
 
 
-
-
 text_type stringToText (void* text)
 {
         int i;
@@ -128,7 +126,6 @@ size_type number_of_samples(void* GBWT)
 }
 
 
-
 bool is_index_bidirectional(void* GBWT)
 
         {
@@ -136,11 +133,79 @@ bool is_index_bidirectional(void* GBWT)
         return gbwt->bidirectional();
 }
 
-std::pair<size_type, size_type>   number_of_gwt_runs   (void* GBWT)
-
+runStats numberOfGWTRuns (void* GBWT)
         {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
-        return gbwt->runs();
+        std::pair<size_type, size_type>  runs = gbwt->runs();
+        runStats rs ;
+        rs.concreteRuns = runs.first   ;
+        rs.logicalRuns = runs.second ;
+        return rs;
 }
+
+
+
+node_type  get_search_state_node(CSearchState cstate){
+        gbwt::SearchState* state = (gbwt::SearchState *) cstate;
+        return state->node;
+}
+
+
+CPair get_search_state_range(CSearchState cstate) {
+
+        CPair tmp;
+        gbwt::SearchState* state = (gbwt::SearchState *) cstate;
+        range_type range = state->range;
+        tmp.first = range.first;
+        tmp.first = range.second;
+        return tmp;
+}
+
+
+CSearchState get_forward_state(CBidirectionalSearchState cstate)   {
+
+        gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
+         void*  tmp = &state->forward;
+        return tmp;
+}
+CSearchState get_backward_state(CBidirectionalSearchState cstate){
+
+        gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
+         void*  tmp = &state->backward;
+        return tmp;
+}
+
+size_type get_search_state_size(CSearchState* cstate) {
+
+        gbwt::SearchState* state = (gbwt::SearchState *) cstate;
+        return  state->size();
+
+}
+
+size_type get_bidirectional_state_size(CBidirectionalSearchState* cstate){
+
+        gbwt::SearchState* state = (gbwt::SearchState*) cstate;
+        return  state->size();
+
+}
+bool is_search_state_empty(void* cstate)      {
+
+        gbwt::SearchState* state = (gbwt::SearchState *) cstate;
+        return  state->empty();
+        }
+
+
+
+bool is_bidirectional_search_state_empty(void* cstate)      {
+        gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
+        return  state->empty();
+        }
+
+void flip_state(void* cstate) {
+ gbwt::BidirectionalState* state = (gbwt::BidirectionalState  *) cstate;
+ state->flip(); }
+
+
+
 
 

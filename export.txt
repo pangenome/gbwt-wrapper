@@ -1,9 +1,9 @@
 {
 global:
- DynamicGBWT_to_GBWT;
- newDynamicGBWT;
+ DGBWT_to_GBWT;
+ DGBWT_new;
  deleteGBWT;
- deleteDynamicGBWT;
- insertSequence;
+ DGBWT_delete;
+ DGBWT_insert;
 local: *;
 };

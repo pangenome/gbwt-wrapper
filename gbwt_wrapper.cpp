@@ -8,9 +8,7 @@ void* DGBWT_new(void) {
 }
 
 void  DGBWT_delete(void * dynGBWT) {
-
-
-          gbwt::DynamicGBWT* gbwt = (gbwt::DynamicGBWT *) dynGBWT;
+        gbwt::DynamicGBWT* gbwt = (gbwt::DynamicGBWT *) dynGBWT;
         delete  gbwt;
 
 }
@@ -66,20 +64,9 @@ void* DGBWT_to_GBWT(void* dynGBWT) {
 }
 
 
-// void*   unDynamizeGBWT (void* dynGBWT) {
-//         printf("skata") ;
-//         gbwt::DynamicGBWT* tmp = (gbwt::DynamicGBWT *)tmp;
-//         gbwt::GBWT item =   gbwt::GBWT(*tmp) ;
-//         printf("pipa") ;
-//         gbwt::GBWT * pitem = &item;
-//         printf("colo") ;
-//         return (void *) pitem;
-// }
 
 
-
-
-void  deleteGBWT(void * GBWT) {
+void  GBWT_delete (void * GBWT) {
 
 
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
@@ -163,7 +150,7 @@ CPair GBWT_get_search_state_range(CSearchState cstate) {
         gbwt::SearchState* state = (gbwt::SearchState *) cstate;
         range_type range = state->range;
         tmp.first = range.first;
-        tmp.first = range.second;
+        tmp.second = range.second;
         return tmp;
 }
 
@@ -297,17 +284,8 @@ bool GBWT_contains_node (void * GBWT,  node_type node)
 }
 
 
-bool GBWT_contains_edge(void * GBWT,  edge_type position)
-{
-
-        gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
-        return gbwt->contains(position);
 
 
-}
-
-
-// CSearchState  GBWT_extend (void* GBWT,  CSearchState state, node_type node){
 
 bool GBWT_contains_search_state(void * GBWT,  CSearchState state)
 {
@@ -350,19 +328,104 @@ comp_type GBWT_to_comp(void * GBWT,  node_type node){
          return gbwt->nodeSize(node);
 }
 
-// size_type GBWT_total_path_length (void * GBWT) {
-//
-//         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
-//         return gbwt->size();
-//
-// }
-//
 
-// extern "C" bool GBWT_contains_edge(edge_type position);
-// extern "C" bool GBWT_contains_search_state(SearchState state);
-// extern "C" bool GBWT_has_edge(node_type from, node_type to);
-// extern "C" comp_type GBWT_to_comp(node_type node);
-// extern "C" node_type GBWT_to_node(comp_type comp);
-// extern "C" size_type GBWT_node_size(node_type node);
-//
-//
+
+CPair* GBWT_edges(void * GBWT,  node_type from ){
+
+         gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
+         std::vector<edge_type> tmp_A = gbwt->edges(from);
+         CPair* tmp_B =  (CPair*) malloc(sizeof(CPair) * tmp_A.size());
+
+         for (size_t i=0;i != tmp_A.size(); i++) // access by reference to avoid copying
+          {
+
+                  tmp_B[i].first=  tmp_A.at(i).first;
+
+                  tmp_B[i].second=  tmp_A.at(i).second;
+          }
+
+          return tmp_B;
+
+}
+
+CPair GBWT_LF_next_node_from_offset (void * GBWT, node_type from, size_type i)
+{
+
+         gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
+         edge_type tmp = gbwt->LF(from,i );
+         CPair tmp_0;
+
+        tmp_0.first = tmp.first;
+
+        tmp_0.second = tmp.second;
+        return tmp_0;
+
+}
+
+
+
+
+
+bool GBWT_contains_edge(void * GBWT,  CPair position)
+{
+
+        std::pair <uint64_t, uint64_t> tmp;
+        tmp = std::make_pair(position.first, position.second);
+        gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
+        return gbwt->contains(tmp);
+}
+
+
+
+CPair GBWT_LF_next_node_from_edge (void * GBWT, CPair position)
+{
+        std::pair <uint64_t, uint64_t> tmp;
+        tmp = std::make_pair(position.first, position.second);
+        gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
+        edge_type tmp_0 = gbwt->LF(tmp);
+        CPair tmp_1;
+        tmp_1.first = tmp_0.first;
+        tmp_1.second = tmp_0.second;
+        return tmp_1;
+}
+
+
+size_type GBWT_LF_next_offset_from_node(void * GBWT, node_type from, size_type i, node_type to)
+{
+
+        gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
+        size_type tmp_0 = gbwt->LF(from, i, to);
+        return tmp_0;
+}
+
+size_type GBWT_LF_next_offset_from_position (void * GBWT, CPair position, node_type to)
+
+{
+        std::pair <uint64_t, uint64_t> tmp;
+        tmp = std::make_pair(position.first, position.second);
+        gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
+        size_type tmp_0 = gbwt->LF(tmp,to);
+        return tmp_0;
+
+
+}
+
+
+
+// typedef std::pair<node_type, size_type>   range_type;
+// (void * GBWT, node_type from, range_type range, node_type to)
+CPair GBWT_LF_range_of_successors_from_node(void * GBWT, node_type from, CPair range, node_type to)
+{
+
+        std::pair <uint64_t, uint64_t> tmp;
+        tmp = std::make_pair(range.first, range.second);
+        gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
+        range_type tmp_0 = gbwt->LF(from,tmp,to);
+        CPair tmp_1;
+
+        tmp_1.first = range.first;
+        tmp_1.second = range.second;
+        return tmp_1;
+}
+
+

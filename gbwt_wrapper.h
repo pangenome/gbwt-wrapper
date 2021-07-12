@@ -17,28 +17,37 @@ typedef void* CSearchState ;
 typedef void* CBidirectionalSearchState ;
 
 typedef std::pair<node_type, size_type>   range_type;
+// typedef std::pair<node_type, size_type>   edge_type;
+// typedef std::pair<rank_type, size_type>   run_type;
+// typedef std::pair<size_type, size_type>   sample_type;  // (i, DA[i]) within a record
+
+
+#ifdef GBWT_SAVE_MEMORY
+typedef std::pair<short_type, short_type> edge_type;
+typedef std::pair<short_type, short_type> run_type;
+typedef std::pair<short_type, short_type> sample_type;  // (i, DA[i]) within a record
+#else
 typedef std::pair<node_type, size_type>   edge_type;
 typedef std::pair<rank_type, size_type>   run_type;
 typedef std::pair<size_type, size_type>   sample_type;  // (i, DA[i]) within a record
+#endif
 
 extern "C" void* DGBWT_new(void);
 
 extern "C" void* DGBWT_to_GBWT(void* dynGBWT);
 
-extern "C" void* unDynamizeGBWT (void* dynGBWT);
 
-extern "C" void deleteGBWT(void* GBWT);
+extern "C" void GBWT_delete(void* GBWT);
 extern "C" void DGBWT_delete(void* dynGBWT);
 
 extern "C" void* DGBWT_to_GBWT(void* dynGBWT);
 
 
 text_type stringToText (void* text);
+void insertGBWTSequence(void* dynGBWT, text_type& text);
 
-extern "C" void insertGBWTSequence(void* dynGBWT, text_type& text);
 extern "C" void DGBWT_insert(void* dynGBWT, void* text);
 
-// GBWT(const DynamicGBWT& source)
 // GBWT methods
 
 extern "C" node_type   GBWT_first_node(void* GBWT);
@@ -49,8 +58,6 @@ extern "C"  CSearchState  GBWT_extend (void* GBWT,  CSearchState state, node_typ
 
 extern "C"  size_type GBWT_locate (void* GBWT,  node_type node, size_type i)   ;
 
-
-// / extern "C" size_type locate(edge_type position)
 
 extern "C" CBidirectionalSearchState biGBWT_find (void* GBWT, node_type node);
 extern "C" void*  bdExtendForwardGBWT (void* GBWT, CBidirectionalSearchState state, node_type node);
@@ -99,11 +106,22 @@ extern "C" void GBWT_flip_state(void*);
 
 // Node statistics
 
+//   std::vector<double> v;
+// double* a = &v[0];
+//
 
 extern "C" bool GBWT_contains_node (void * GBWT, node_type node);
-extern "C" bool GBWT_contains_edge(void * GBWT,  edge_type position);
+extern "C" bool GBWT_contains_edge(void * GBWT,  CPair position);
 extern "C" bool GBWT_contains_search_state(void * GBWT,  CSearchState state);
 extern "C" bool GBWT_has_edge(void * GBWT,  node_type from, node_type to);
+
+
+// typedef std::pair<node_type, size_type>   edge_type;
+
+// std::vector<edge_type> edges(node_type from) const: Returns the edges from node from.
+
+
+extern "C" CPair* GBWT_edges(void * GBWT,  node_type from );
 
 // extern "C" CPair (CSearchState);
 extern "C" comp_type GBWT_to_comp(void * GBWT,  node_type node);
@@ -111,9 +129,13 @@ extern "C" node_type GBWT_to_node(void * GBWT,  comp_type comp);
 extern "C" size_type GBWT_node_size(void * GBWT,  node_type node);
 
 
+extern "C" CPair GBWT_LF_next_node_from_offset (void * GBWT, node_type from, size_type i);
+extern "C" CPair GBWT_LF_next_node_from_edge(void * GBWT, CPair position);
+extern "C" size_type GBWT_LF_next_offset_from_node(void * GBWT, node_type from, size_type i, node_type to);
+extern "C" size_type GBWT_LF_next_offset_from_position (void * GBWT, CPair position, node_type to);
+extern "C" CPair GBWT_LF_range_of_successors_from_node(void * GBWT, node_type from, CPair  range, node_type to);
+extern "C" CPair GBWT_LF_range_of_successors_from_search_state(void * GBWT, CSearchState state, node_type to);
 
-// extern "C" std::vector<edge_type> edges(node_type from)
 
-// extern "C" std::pair<size_type, size_type>   number_of_gwt_runs   (void* GBWT);
-// extern "C" std::pair<size_type, size_type>   number_of_gwt_runs   (void* GBWT);
+// range_type bdLF(SearchState state, node_type to, size_type& reverse_offset) const
 

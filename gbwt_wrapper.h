@@ -32,6 +32,15 @@ typedef std::pair<rank_type, size_type>   run_type;
 typedef std::pair<size_type, size_type>   sample_type;  // (i, DA[i]) within a record
 #endif
 
+// void insert(const text_type& text, bool has_both_orientations = false,
+//                 size_type sample_interval = SAMPLE_INTERVAL)
+// void insert(const text_type& text, size_type text_length, bool
+//                 has_both_orientations = false, size_type sample_interval =
+//                 SAMPLE_INTERVAL)
+// void insert(const vector_type& text, bool has_both_orientations = false,
+//                 size_type sample_interval = SAMPLE_INTERVAL)
+
+
 extern "C" void* DGBWT_new(void);
 
 extern "C" void* DGBWT_to_GBWT(void* dynGBWT);

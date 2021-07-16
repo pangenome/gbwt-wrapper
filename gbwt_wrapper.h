@@ -2,6 +2,9 @@
 #include"/usr/local/include/gbwt/dynamic_gbwt.h"
 #include"/usr/local/include/gbwt/gbwt.h"
 #include"/usr/local/include/gbwt/algorithms.h"
+// #include"/usr/local/include/gbwtgraph/gbwtgraph.h"
+
+#include"/usr/local/include/gbwtgraph/gfa.h"
 
 typedef sdsl::int_vector<0> text_type;
 typedef uint64_t size_type;
@@ -39,6 +42,21 @@ typedef std::pair<size_type, size_type>   sample_type;  // (i, DA[i]) within a r
 //                 SAMPLE_INTERVAL)
 // void insert(const vector_type& text, bool has_both_orientations = false,
 //                 size_type sample_interval = SAMPLE_INTERVAL)
+
+
+// typedef struct
+// {
+//   size_type node_width;// = gbwt::WORD_BITS;
+//   size_type batch_size;// = gbwt::DynamicGBWT::INSERT_BATCH_SIZE;
+//   size_type sample_interval;// = gbwt::DynamicGBWT::SAMPLE_INTERVAL;
+//   size_t max_node_length;// = MAX_NODE_LENGTH;
+//   bool automatic_batch_size;// = true;
+//   bool show_progress;// = false;
+//   char* DEFAULT_REGEX;
+//   char* DEFAULT_FIELDS;
+//
+// }GFA_parsing_parameters ;
+
 
 
 extern "C" void* DGBWT_new(void);
@@ -92,7 +110,16 @@ struct runStats{
         uint64_t logicalRuns;
 };
 
+struct refPair{
+   void* first;
+   void* second;
+};
 
+
+struct gbwtSequenceSourcePair{
+   void* gbwt_ref;
+   void* sequence_source_ref;
+};
 
 extern "C" runStats numberOfGWTRuns   (void* GBWT);
 
@@ -144,7 +171,12 @@ extern "C" size_type GBWT_LF_next_offset_from_node(void * GBWT, node_type from, 
 extern "C" size_type GBWT_LF_next_offset_from_position (void * GBWT, CPair position, node_type to);
 extern "C" CPair GBWT_LF_range_of_successors_from_node(void * GBWT, node_type from, CPair  range, node_type to);
 extern "C" CPair GBWT_LF_range_of_successors_from_search_state(void * GBWT, CSearchState state, node_type to);
+//  const std::string&
 
+//  parameters = GFAParsingParameters()
 
-// range_type bdLF(SearchState state, node_type to, size_type& reverse_offset) const
+extern "C" gbwtSequenceSourcePair  GBWTGRAPH_gfa_to_gbwt(char* gfa_filename  );
+
+// std::pair<std::unique_ptr<gbwt::GBWT>, std::unique_ptr<SequenceSource>> gfa_to_gbwt(const std::string& gfa_filename, const GFAParsingParameters& parameters = GFAParsingParameters());
+
 

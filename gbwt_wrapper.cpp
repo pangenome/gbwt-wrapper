@@ -429,3 +429,25 @@ CPair GBWT_LF_range_of_successors_from_node(void * GBWT, node_type from, CPair r
 }
 
 
+//  const char* myStr = "This is a C string!";
+// std::string myCppString = myStr;
+
+// std::pair<std::unique_ptr<gbwt::GBWT>, std::unique_ptr<SequenceSource>>
+// gfa_to_gbwt(const std::string& gfa_filename, const GFAParsingParameters& parameters = GFAParsingParameters());
+
+
+gbwtSequenceSourcePair GBWTGRAPH_gfa_to_gbwt(char* gfa_filename){
+        std::string cppString = gfa_filename;
+        std::pair<std::unique_ptr<gbwt::GBWT>, std::unique_ptr<gbwtgraph::SequenceSource>>  tmp = gbwtgraph::gfa_to_gbwt(cppString);
+        void* tmp_1 = (void*) tmp.first.release();
+        void* tmp_2 =  (void*)  tmp.second.release();
+        gbwtSequenceSourcePair  result;
+        result.gbwt_ref= tmp_1  ;
+        result.sequence_source_ref=tmp_2;
+        return result;
+}
+
+
+//cannot convert ‘std::unique_ptr<gbwtgraph::SequenceSource>::release’ from
+//type ‘gbwtgraph::SequenceSource*
+//(std::unique_ptr<gbwtgraph::SequenceSource>::)() noexcept’ to type ‘void*

@@ -1,4 +1,15 @@
 #include"gbwt_wrapper.h"
+#include <math.h>
+#include <cinttypes>
+#include <stdio.h>
+
+char * debugger_val;
+
+
+char * debug(void) {
+       return debugger_val;
+
+}
 
 
 void* DGBWT_new(void) {
@@ -12,7 +23,6 @@ void  DGBWT_delete(void * dynGBWT) {
         delete  gbwt;
 
 }
-
 
 text_type stringToText (void* text)
 {
@@ -40,21 +50,17 @@ text_type stringToText (void* text)
         return str_vector;
 }
 
-
 void insertGBWTSequence (void *  dynGBWT, text_type& text) {
         gbwt::DynamicGBWT* bgwt = (gbwt::DynamicGBWT *) dynGBWT;
         bgwt->insert(text);
 }
-
 
 void  DGBWT_insert (void* dynGBWT, void* text) {
         text_type s =  stringToText(text);
         insertGBWTSequence(dynGBWT, s);
 }
 
-
 // void DGBWT_insert(void*, *void text);
-
 
 void* DGBWT_to_GBWT(void* dynGBWT) {
         gbwt::DynamicGBWT* tmp = (gbwt::DynamicGBWT *)dynGBWT;
@@ -62,9 +68,6 @@ void* DGBWT_to_GBWT(void* dynGBWT) {
         gbwt::GBWT * pitem = &item;
         return (void *) pitem;
 }
-
-
-
 
 void  GBWT_delete (void * GBWT) {
 
@@ -86,15 +89,11 @@ bool has_empty_index (void * GBWT) {
         return gbwt->empty();
 }
 
-
-
-
 size_type GBWT_number_of_paths(void* GBWT)
         {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->sequences();
 }
-
 
 size_type GBWT_alphabet_size(void* GBWT)
 
@@ -102,7 +101,6 @@ size_type GBWT_alphabet_size(void* GBWT)
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->sigma();
 }
-
 
 size_type GBWT_effective_alpahbet_size(void* GBWT)
 
@@ -117,7 +115,6 @@ size_type GBWT_number_of_samples(void* GBWT)
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->samples();
 }
-
 
 bool is_index_bidirectional(void* GBWT)
 
@@ -136,13 +133,10 @@ runStats numberOfGWTRuns (void* GBWT)
         return rs;
 }
 
-
-
 node_type  GBWT_get_search_state_node(CSearchState cstate){
         gbwt::SearchState* state = (gbwt::SearchState *) cstate;
         return state->node;
 }
-
 
 CPair GBWT_get_search_state_range(CSearchState cstate) {
 
@@ -154,13 +148,13 @@ CPair GBWT_get_search_state_range(CSearchState cstate) {
         return tmp;
 }
 
-
 CSearchState GBWT_get_forward_state(CBidirectionalSearchState cstate)   {
 
         gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
-         void*  tmp = &state->forward;
+        void*  tmp = &state->forward;
         return tmp;
 }
+
 CSearchState GBWT_get_backward_state(CBidirectionalSearchState cstate){
 
         gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
@@ -194,7 +188,6 @@ bool GBWT_is_search_state_empty(void* cstate)      {
         return  state->empty();
         }
 
-
 bool is_bidirectional_search_state_empty(void* cstate)      {
         gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
         return  state->empty();
@@ -204,57 +197,48 @@ void GBWT_flip_state(void* cstate) {
  gbwt::BidirectionalState* state = (gbwt::BidirectionalState  *) cstate;
  state->flip(); }
 
-
 CSearchState  GBWT_find (void* GBWT, node_type node) {
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          gbwt::SearchState new_state = gbwt->find(node)  ;
-         gbwt::SearchState*  tmp = &new_state ;
-         return (CSearchState  *) tmp  ;
- }
+         CSearchState tmp = &new_state ;
+         return  tmp  ;
+}
+
 
 
 CSearchState  GBWT_extend (void* GBWT,  CSearchState state, node_type node){
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          gbwt::SearchState*  state1 = (gbwt::SearchState*) state ;
          gbwt::SearchState new_state = gbwt->extend(  *state1 , node );
-         gbwt::SearchState*  tmp = &new_state ;
-         return (CSearchState) tmp;
+         CSearchState tmp = &new_state ;
+         return tmp;
 }
-
-
-
-
-
-
 
 CBidirectionalSearchState biGBWT_find (void* GBWT, node_type node){
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          gbwt::BidirectionalState   new_state = gbwt->bdFind(node)  ;
-         gbwt::BidirectionalState*  tmp = &new_state ;
-         return (CBidirectionalSearchState   *) tmp  ;
+         CBidirectionalSearchState tmp = &new_state ;
+         return tmp;
  }
 
-void*  bdExtendForwardGBWT (void* GBWT, CBidirectionalSearchState state, node_type node){
+void *  bdExtendForwardGBWT (void* GBWT, CBidirectionalSearchState state, node_type node){
 
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          gbwt::BidirectionalState*  state1 = (gbwt::BidirectionalState*) state ;
          gbwt::BidirectionalState   new_state = gbwt->bdExtendForward ( *state1,  node)  ;
-         gbwt::BidirectionalState*  tmp = &new_state ;
-         return (CBidirectionalSearchState   *) tmp  ;
-
+         CBidirectionalSearchState  tmp = &new_state ;
+         return tmp  ;
 
 }
+
 void*  bdExtendBackwardGBWT (void* GBWT, CBidirectionalSearchState state, node_type node){
 
                 gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
                 gbwt::BidirectionalState*  state1 = (gbwt::BidirectionalState*) state ;
                 gbwt::BidirectionalState   new_state = gbwt->bdExtendBackward( *state1,  node)  ;
-                gbwt::BidirectionalState*  tmp = &new_state ;
-                return (CBidirectionalSearchState   *) tmp  ;
-
-
+                CBidirectionalSearchState  tmp = &new_state ;
+                return   tmp  ;
         }
-
 
 node_type GBWT_first_node(void* GBWT){
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
@@ -265,45 +249,28 @@ size_type  GBWT_locate  (void* GBWT, node_type node, size_type i){
 
                 gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
                 return gbwt->locate (node, i);
-
         }
-
 
 bool GBWT_get_bidirectional_state_size(CBidirectionalSearchState state){
         gbwt::BidirectionalState* state1 = (gbwt::BidirectionalState*) state ;
         return  state1->empty();
-
 }
 
-bool GBWT_contains_node (void * GBWT,  node_type node)
-{
+bool GBWT_contains_node (void * GBWT,  node_type node) {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->contains(node);
-
-
 }
 
-
-
-
-
-bool GBWT_contains_search_state(void * GBWT,  CSearchState state)
-{
-
+bool GBWT_contains_search_state(void * GBWT,  CSearchState state) {
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          gbwt::SearchState*  state1 = (gbwt::SearchState*) state ;
-         return gbwt->contains(*state1);
-
-}
-
+         return gbwt->contains(*state1); }
 
 bool GBWT_has_edge(void * GBWT,  node_type from, node_type to)
 {
-
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          return gbwt->hasEdge(from,to);
 }
-
 
 comp_type GBWT_to_comp(void * GBWT,  node_type node){
 
@@ -312,22 +279,15 @@ comp_type GBWT_to_comp(void * GBWT,  node_type node){
          return gbwt->toComp(node);
 }
 
-
- node_type GBWT_to_node(void * GBWT,  comp_type comp)
- {
-
-
+node_type GBWT_to_node(void * GBWT,  comp_type comp) {
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          return gbwt->toNode(comp);
 }
- size_type GBWT_node_size(void * GBWT,  node_type node)
-         {
 
-
+size_type GBWT_node_size(void * GBWT,  node_type node) {
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          return gbwt->nodeSize(node);
 }
-
 
 
 CPair* GBWT_edges(void * GBWT,  node_type from ){
@@ -351,12 +311,10 @@ CPair* GBWT_edges(void * GBWT,  node_type from ){
 CPair GBWT_LF_next_node_from_offset (void * GBWT, node_type from, size_type i)
 {
 
-         gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
-         edge_type tmp = gbwt->LF(from,i );
-         CPair tmp_0;
-
+        gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
+        edge_type tmp = gbwt->LF(from,i );
+        CPair tmp_0;
         tmp_0.first = tmp.first;
-
         tmp_0.second = tmp.second;
         return tmp_0;
 
@@ -450,4 +408,4 @@ gbwtSequenceSourcePair GBWTGRAPH_gfa_to_gbwt(char* gfa_filename){
 
 //cannot convert ‘std::unique_ptr<gbwtgraph::SequenceSource>::release’ from
 //type ‘gbwtgraph::SequenceSource*
-//(std::unique_ptr<gbwtgraph::SequenceSource>::)() noexcept’ to type ‘void*
+//(fgq::havque_ptr<gbwtgraph::SequenceSource>::)() noexcept’ to type ‘void*

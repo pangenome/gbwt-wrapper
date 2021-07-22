@@ -20,10 +20,6 @@ typedef void* CSearchState ;
 typedef void* CBidirectionalSearchState ;
 
 typedef std::pair<node_type, size_type>   range_type;
-// typedef std::pair<node_type, size_type>   edge_type;
-// typedef std::pair<rank_type, size_type>   run_type;
-// typedef std::pair<size_type, size_type>   sample_type;  // (i, DA[i]) within a record
-
 
 #ifdef GBWT_SAVE_MEMORY
 typedef std::pair<short_type, short_type> edge_type;
@@ -34,28 +30,6 @@ typedef std::pair<node_type, size_type>   edge_type;
 typedef std::pair<rank_type, size_type>   run_type;
 typedef std::pair<size_type, size_type>   sample_type;  // (i, DA[i]) within a record
 #endif
-
-// void insert(const text_type& text, bool has_both_orientations = false,
-//                 size_type sample_interval = SAMPLE_INTERVAL)
-// void insert(const text_type& text, size_type text_length, bool
-//                 has_both_orientations = false, size_type sample_interval =
-//                 SAMPLE_INTERVAL)
-// void insert(const vector_type& text, bool has_both_orientations = false,
-//                 size_type sample_interval = SAMPLE_INTERVAL)
-
-
-// typedef struct
-// {
-//   size_type node_width;// = gbwt::WORD_BITS;
-//   size_type batch_size;// = gbwt::DynamicGBWT::INSERT_BATCH_SIZE;
-//   size_type sample_interval;// = gbwt::DynamicGBWT::SAMPLE_INTERVAL;
-//   size_t max_node_length;// = MAX_NODE_LENGTH;
-//   bool automatic_batch_size;// = true;
-//   bool show_progress;// = false;
-//   char* DEFAULT_REGEX;
-//   char* DEFAULT_FIELDS;
-//
-// }GFA_parsing_parameters ;
 
 
 
@@ -80,7 +54,7 @@ extern "C" void DGBWT_insert(void* dynGBWT, void* text);
 extern "C" node_type   GBWT_first_node(void* GBWT);
 
 
-extern "C" CSearchState  GBWT_find (void* GBWT, node_type node);
+extern "C"  CSearchState  GBWT_find (void* GBWT, node_type node);
 extern "C"  CSearchState  GBWT_extend (void* GBWT,  CSearchState state, node_type node);
 
 extern "C"  size_type GBWT_locate (void* GBWT,  node_type node, size_type i)   ;
@@ -94,7 +68,7 @@ extern "C" uint64_t GBWT_total_path_length(void* GBWT);
 extern "C" uint64_t GBWT_number_of_paths(void* GBWT);
 extern "C" uint64_t GBWT_alphabet_size(void* GBWT);
 extern "C" uint64_t GBWT_number_of_samples(void* GBWT);
-extern "C" uint64_t GBWT_effective_alpahbet_size(void* GBWT);
+extern "C" uint64_t GBWT_effective_alphabet_size(void* GBWT);
 
 extern "C" bool has_empty_index (void* GBWT);
 extern "C" bool is_index_bidirectional(void* GBWT);
@@ -171,6 +145,8 @@ extern "C" size_type GBWT_LF_next_offset_from_node(void * GBWT, node_type from, 
 extern "C" size_type GBWT_LF_next_offset_from_position (void * GBWT, CPair position, node_type to);
 extern "C" CPair GBWT_LF_range_of_successors_from_node(void * GBWT, node_type from, CPair  range, node_type to);
 extern "C" CPair GBWT_LF_range_of_successors_from_search_state(void * GBWT, CSearchState state, node_type to);
+
+extern "C" char*  debug(void);
 //  const std::string&
 
 //  parameters = GFAParsingParameters()

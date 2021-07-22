@@ -57,6 +57,8 @@ extern "C" node_type   GBWT_first_node(void* GBWT);
 extern "C"  CSearchState  GBWT_find (void* GBWT, node_type node);
 extern "C"  CSearchState  GBWT_extend (void* GBWT,  CSearchState state, node_type node);
 
+extern "C"  CSearchState  GBWT_extend_debug (void* GBWT,  CSearchState state, node_type node);
+
 extern "C"  size_type GBWT_locate (void* GBWT,  node_type node, size_type i)   ;
 
 
@@ -108,8 +110,10 @@ extern "C" CSearchState GBWT_get_backward_state(CBidirectionalSearchState);
 
 extern "C" size_type  GBWT_get_search_state_size(CSearchState);
 
-extern "C" bool GBWT_get_bidirectional_state_size(CBidirectionalSearchState state);
-extern "C" bool GBWT_is_search_state_empty(void*);
+extern "C" size_type GBWT_get_bidirectional_state_size(CBidirectionalSearchState state);
+extern "C" bool GBWT_is_search_state_empty(CSearchState);
+
+extern "C" bool GBWT_empty (void*);
 extern "C" void GBWT_flip_state(void*);
 
 
@@ -146,7 +150,7 @@ extern "C" size_type GBWT_LF_next_offset_from_position (void * GBWT, CPair posit
 extern "C" CPair GBWT_LF_range_of_successors_from_node(void * GBWT, node_type from, CPair  range, node_type to);
 extern "C" CPair GBWT_LF_range_of_successors_from_search_state(void * GBWT, CSearchState state, node_type to);
 
-extern "C" char*  debug(void);
+extern "C" void*  debug(void);
 //  const std::string&
 
 //  parameters = GFAParsingParameters()

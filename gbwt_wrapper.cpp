@@ -3,10 +3,10 @@
 #include <cinttypes>
 #include <stdio.h>
 
-char * debugger_val;
+void * debugger_val;
 
 
-char * debug(void) {
+void * debug(void) {
        return debugger_val;
 
 }
@@ -135,7 +135,11 @@ runStats numberOfGWTRuns (void* GBWT)
 
 node_type  GBWT_get_search_state_node(CSearchState cstate){
         gbwt::SearchState* state = (gbwt::SearchState *) cstate;
-        return state->node;
+        uint64_t tmp = state->node  ;
+        gbwt::SearchState skata = *state  ;
+        debugger_val =  & skata.node ;
+
+        return tmp;
 }
 
 CPair GBWT_get_search_state_range(CSearchState cstate) {
@@ -185,8 +189,10 @@ size_type GBWT_total_path_length (void * GBWT) {
 
 bool GBWT_is_search_state_empty(void* cstate)      {
         gbwt::SearchState* state = (gbwt::SearchState *) cstate;
-        return  state->empty();
-        }
+        bool tmp  = state->empty();
+        return  tmp;
+}
+
 
 bool is_bidirectional_search_state_empty(void* cstate)      {
         gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
@@ -198,21 +204,32 @@ void GBWT_flip_state(void* cstate) {
  state->flip(); }
 
 CSearchState  GBWT_find (void* GBWT, node_type node) {
-         gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
-         gbwt::SearchState new_state = gbwt->find(node)  ;
-         CSearchState tmp = &new_state ;
-         return  tmp  ;
+         gbwt::GBWT* gbwt = (gbwt::GBWT*) GBWT;
+         gbwt::SearchState tmp_state =  gbwt->find(node)  ;
+         CSearchState tmp = &tmp_state ;
+         return tmp ;
 }
 
 
+
+// CSearchState  GBWT_extend (void* GBWT,  CSearchState state, node_type node){
+//          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
+//          gbwt::SearchState*  state1 = (gbwt::SearchState*) state ;
+//          gbwt::SearchState new_state = gbwt->extend( *state1 , node );
+//          CSearchState tmp = &new_state ;
+//          return tmp;
+// }
 
 CSearchState  GBWT_extend (void* GBWT,  CSearchState state, node_type node){
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          gbwt::SearchState*  state1 = (gbwt::SearchState*) state ;
-         gbwt::SearchState new_state = gbwt->extend(  *state1 , node );
+         gbwt::SearchState new_state = gbwt->extend( *state1 , node );
+         debugger_val =  & new_state.node ;
          CSearchState tmp = &new_state ;
          return tmp;
 }
+
+
 
 CBidirectionalSearchState biGBWT_find (void* GBWT, node_type node){
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
@@ -237,7 +254,7 @@ void*  bdExtendBackwardGBWT (void* GBWT, CBidirectionalSearchState state, node_t
                 gbwt::BidirectionalState*  state1 = (gbwt::BidirectionalState*) state ;
                 gbwt::BidirectionalState   new_state = gbwt->bdExtendBackward( *state1,  node)  ;
                 CBidirectionalSearchState  tmp = &new_state ;
-                return   tmp  ;
+                return tmp  ;
         }
 
 node_type GBWT_first_node(void* GBWT){
@@ -251,9 +268,9 @@ size_type  GBWT_locate  (void* GBWT, node_type node, size_type i){
                 return gbwt->locate (node, i);
         }
 
-bool GBWT_get_bidirectional_state_size(CBidirectionalSearchState state){
+size_type   GBWT_get_bidirectional_state_size(CBidirectionalSearchState state){
         gbwt::BidirectionalState* state1 = (gbwt::BidirectionalState*) state ;
-        return  state1->empty();
+        return  state1->size();
 }
 
 bool GBWT_contains_node (void * GBWT,  node_type node) {
@@ -400,8 +417,8 @@ gbwtSequenceSourcePair GBWTGRAPH_gfa_to_gbwt(char* gfa_filename){
         void* tmp_1 = (void*) tmp.first.release();
         void* tmp_2 =  (void*)  tmp.second.release();
         gbwtSequenceSourcePair  result;
-        result.gbwt_ref= tmp_1  ;
-        result.sequence_source_ref=tmp_2;
+        result.gbwt_ref = tmp_1;
+        result.sequence_source_ref = tmp_2;
         return result;
 }
 

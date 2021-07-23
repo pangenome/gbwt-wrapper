@@ -3,11 +3,8 @@
 #include <cinttypes>
 #include <stdio.h>
 
-void * debugger_val;
 
 
-void * debug(void) {
-       return debugger_val;
 
 }
 
@@ -50,15 +47,18 @@ text_type stringToText (void* text)
         return str_vector;
 }
 
-void insertGBWTSequence (void *  dynGBWT, text_type& text) {
+void* insertGBWTSequence (void *  dynGBWT, text_type& text) {
         gbwt::DynamicGBWT* bgwt = (gbwt::DynamicGBWT *) dynGBWT;
         bgwt->insert(text);
+        return dynGBWT;
 }
 
-void  DGBWT_insert (void* dynGBWT, void* text) {
+void*  DGBWT_insert (void* dynGBWT, void* text) {
         text_type s =  stringToText(text);
         insertGBWTSequence(dynGBWT, s);
+         return dynGBWT;
 }
+
 
 // void DGBWT_insert(void*, *void text);
 
@@ -136,9 +136,6 @@ runStats numberOfGWTRuns (void* GBWT)
 node_type  GBWT_get_search_state_node(CSearchState cstate){
         gbwt::SearchState* state = (gbwt::SearchState *) cstate;
         uint64_t tmp = state->node  ;
-        gbwt::SearchState skata = *state  ;
-        debugger_val =  & skata.node ;
-
         return tmp;
 }
 
@@ -152,19 +149,27 @@ CPair GBWT_get_search_state_range(CSearchState cstate) {
         return tmp;
 }
 
-CSearchState GBWT_get_forward_state(CBidirectionalSearchState cstate)   {
-
-        gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
-        void*  tmp = &state->forward;
-        return tmp;
+int sizeof_search_state () {
+        return sizeof(gbwt::SearchState) ;
 }
 
-CSearchState GBWT_get_backward_state(CBidirectionalSearchState cstate){
+int sizeof_bi_search_state () {
+        return sizeof(gbwt::BidirectionalState) ;
+}
+
+void  GBWT_get_forward_state(CBidirectionalSearchState  out, CBidirectionalSearchState cstate)   {
+        gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
+        gbwt::SearchState* tmp = (gbwt::SearchState*) out;
+        *tmp = state->forward;
+}
+
+void GBWT_get_backward_state(CBidirectionalSearchState  out,  CBidirectionalSearchState cstate){
 
         gbwt::BidirectionalState* state = (gbwt::BidirectionalState *) cstate;
-         void*  tmp = &state->backward;
-        return tmp;
+        gbwt::SearchState* tmp = (gbwt::SearchState*) out;
+        *tmp = state->backward;
 }
+
 
 size_type GBWT_get_search_state_size(CSearchState cstate) {
 
@@ -172,13 +177,6 @@ size_type GBWT_get_search_state_size(CSearchState cstate) {
         return  state->size();
 
 }
-
-// size_type GBWT_total_path_length(CBidirectionalSearchState cstate){
-//
-//         gbwt::SearchState* state = (gbwt::SearchState*) cstate;
-//         return  state->size();
-//
-// }
 
 size_type GBWT_total_path_length (void * GBWT) {
 
@@ -199,62 +197,47 @@ bool is_bidirectional_search_state_empty(void* cstate)      {
         return  state->empty();
         }
 
-void GBWT_flip_state(void* cstate) {
+void  GBWT_flip_state(void* cstate) {
  gbwt::BidirectionalState* state = (gbwt::BidirectionalState  *) cstate;
- state->flip(); }
+ state->flip();
+}
 
-CSearchState  GBWT_find (void* GBWT, node_type node) {
+ void  GBWT_find (void* GBWT, void* out, node_type node) {
          gbwt::GBWT* gbwt = (gbwt::GBWT*) GBWT;
-         gbwt::SearchState tmp_state =  gbwt->find(node)  ;
-         CSearchState tmp = &tmp_state ;
-         return tmp ;
-}
-
-
-
-// CSearchState  GBWT_extend (void* GBWT,  CSearchState state, node_type node){
-//          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
-//          gbwt::SearchState*  state1 = (gbwt::SearchState*) state ;
-//          gbwt::SearchState new_state = gbwt->extend( *state1 , node );
-//          CSearchState tmp = &new_state ;
-//          return tmp;
-// }
-
-CSearchState  GBWT_extend (void* GBWT,  CSearchState state, node_type node){
-         gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
-         gbwt::SearchState*  state1 = (gbwt::SearchState*) state ;
-         gbwt::SearchState new_state = gbwt->extend( *state1 , node );
-         debugger_val =  & new_state.node ;
-         CSearchState tmp = &new_state ;
-         return tmp;
-}
-
-
-
-CBidirectionalSearchState biGBWT_find (void* GBWT, node_type node){
-         gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
-         gbwt::BidirectionalState   new_state = gbwt->bdFind(node)  ;
-         CBidirectionalSearchState tmp = &new_state ;
-         return tmp;
+         gbwt::SearchState* tmp = (gbwt::SearchState*)  out;
+         *tmp =    gbwt->find(node) ;
  }
 
-void *  bdExtendForwardGBWT (void* GBWT, CBidirectionalSearchState state, node_type node){
 
+
+void  GBWT_extend ( void* GBWT, CSearchState out,   CSearchState state, node_type node){
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
-         gbwt::BidirectionalState*  state1 = (gbwt::BidirectionalState*) state ;
-         gbwt::BidirectionalState   new_state = gbwt->bdExtendForward ( *state1,  node)  ;
-         CBidirectionalSearchState  tmp = &new_state ;
-         return tmp  ;
-
+         gbwt::SearchState*  state1 = (gbwt::SearchState*) state ;
+         gbwt::SearchState* tmp = (gbwt::SearchState*)  out;
+         *tmp = gbwt->extend( *state1 , node );
 }
 
-void*  bdExtendBackwardGBWT (void* GBWT, CBidirectionalSearchState state, node_type node){
 
-                gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
-                gbwt::BidirectionalState*  state1 = (gbwt::BidirectionalState*) state ;
-                gbwt::BidirectionalState   new_state = gbwt->bdExtendBackward( *state1,  node)  ;
-                CBidirectionalSearchState  tmp = &new_state ;
-                return tmp  ;
+
+void GBWT_fbfind (void* GBWT,  CBidirectionalSearchState out,node_type node){
+         gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
+         gbwt::BidirectionalState* tmp = (gbwt::BidirectionalState  *) out;
+         *tmp = gbwt->bdFind(node)   ;
+ }
+
+void  bdExtendForwardGBWT (void* GBWT, CBidirectionalSearchState out,  CBidirectionalSearchState state, node_type node){
+
+        gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
+        gbwt::BidirectionalState*   tmp = ( gbwt::BidirectionalState* ) out;
+        gbwt::BidirectionalState*  state1 = (gbwt::BidirectionalState*) state ;
+        *tmp = gbwt->bdExtendForward ( *state1,  node)  ;
+}
+
+void  bdExtendBackwardGBWT (void* GBWT,  CBidirectionalSearchState out, CBidirectionalSearchState state, node_type node){
+        gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
+        gbwt::BidirectionalState*   tmp = ( gbwt::BidirectionalState* ) out;
+        gbwt::BidirectionalState*  state1 = (gbwt::BidirectionalState*) state ;
+        *tmp = gbwt->bdExtendBackward ( *state1,  node)  ;
         }
 
 node_type GBWT_first_node(void* GBWT){
@@ -290,8 +273,6 @@ bool GBWT_has_edge(void * GBWT,  node_type from, node_type to)
 }
 
 comp_type GBWT_to_comp(void * GBWT,  node_type node){
-
-
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          return gbwt->toComp(node);
 }
@@ -308,16 +289,13 @@ size_type GBWT_node_size(void * GBWT,  node_type node) {
 
 
 CPair* GBWT_edges(void * GBWT,  node_type from ){
-
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          std::vector<edge_type> tmp_A = gbwt->edges(from);
          CPair* tmp_B =  (CPair*) malloc(sizeof(CPair) * tmp_A.size());
 
          for (size_t i=0;i != tmp_A.size(); i++) // access by reference to avoid copying
           {
-
                   tmp_B[i].first=  tmp_A.at(i).first;
-
                   tmp_B[i].second=  tmp_A.at(i).second;
           }
 
@@ -337,10 +315,6 @@ CPair GBWT_LF_next_node_from_offset (void * GBWT, node_type from, size_type i)
 
 }
 
-
-
-
-
 bool GBWT_contains_edge(void * GBWT,  CPair position)
 {
 
@@ -349,7 +323,6 @@ bool GBWT_contains_edge(void * GBWT,  CPair position)
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->contains(tmp);
 }
-
 
 
 CPair GBWT_LF_next_node_from_edge (void * GBWT, CPair position)
@@ -386,29 +359,18 @@ size_type GBWT_LF_next_offset_from_position (void * GBWT, CPair position, node_t
 }
 
 
-
-// typedef std::pair<node_type, size_type>   range_type;
-// (void * GBWT, node_type from, range_type range, node_type to)
 CPair GBWT_LF_range_of_successors_from_node(void * GBWT, node_type from, CPair range, node_type to)
 {
-
         std::pair <uint64_t, uint64_t> tmp;
         tmp = std::make_pair(range.first, range.second);
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         range_type tmp_0 = gbwt->LF(from,tmp,to);
         CPair tmp_1;
-
         tmp_1.first = range.first;
         tmp_1.second = range.second;
         return tmp_1;
 }
 
-
-//  const char* myStr = "This is a C string!";
-// std::string myCppString = myStr;
-
-// std::pair<std::unique_ptr<gbwt::GBWT>, std::unique_ptr<SequenceSource>>
-// gfa_to_gbwt(const std::string& gfa_filename, const GFAParsingParameters& parameters = GFAParsingParameters());
 
 
 gbwtSequenceSourcePair GBWTGRAPH_gfa_to_gbwt(char* gfa_filename){
@@ -423,6 +385,32 @@ gbwtSequenceSourcePair GBWTGRAPH_gfa_to_gbwt(char* gfa_filename){
 }
 
 
-//cannot convert ‘std::unique_ptr<gbwtgraph::SequenceSource>::release’ from
-//type ‘gbwtgraph::SequenceSource*
-//(fgq::havque_ptr<gbwtgraph::SequenceSource>::)() noexcept’ to type ‘void*
+
+void* new_search_state ()
+{
+
+        gbwt::SearchState * tmp =  (gbwt::SearchState * ) malloc(sizeof(gbwt::SearchState) );
+        return  (void *) tmp;
+}
+
+void delete_search_state  (void* state)
+{
+        gbwt::SearchState * tmp =  (gbwt::SearchState * ) state ;
+        free(tmp)  ;
+}
+
+
+void* new_bi_search_state ()
+{
+
+        gbwt::BidirectionalState * tmp =  (gbwt::BidirectionalState  *) malloc(sizeof(gbwt::BidirectionalState));
+        return  (void *) tmp;
+}
+
+void delete_bi_search_state  (void* state)
+{
+        gbwt::BidirectionalState * tmp =  (gbwt::BidirectionalState * ) state ;
+        free(tmp)  ;
+}
+
+

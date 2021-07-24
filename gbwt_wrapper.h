@@ -87,27 +87,15 @@ struct gbwtSequenceSourcePair{
 
 
 
-extern "C" runStats GBWT_number_of_GWT_runs   (void* GBWT);
-extern "C" uint64_t GBWT_total_path_length(void* GBWT);
-extern "C" uint64_t GBWT_number_of_paths(void* GBWT);
-extern "C" uint64_t GBWT_alphabet_size(void* GBWT);
-extern "C" uint64_t GBWT_number_of_samples(void* GBWT);
-extern "C" uint64_t GBWT_effective_alphabet_size(void* GBWT);
-extern "C" bool GBWT_has_empty_index (void* GBWT);
-extern "C" bool GBWT_is_index_bidirectional(void* GBWT);
-
-
-extern "C"  constexpr auto GBWT_runs =  GBWT_number_of_GWT_runs;
-extern "C"  constexpr auto GBWT_size =  GBWT_total_path_length;
-extern "C"  constexpr auto GBWT_sequences =  GBWT_number_of_paths;
-extern "C"   constexpr auto GBWT_sigma = GBWT_alphabet_size ;
-extern "C"  constexpr auto GBWT_samples = GBWT_number_of_samples ;
-
-
-
-extern "C" constexpr auto GBWT_effective = GBWT_effective_alphabet_size ;
-extern "C" constexpr auto GBWT_empty = GBWT_has_empty_index   ;
-extern "C" constexpr auto GBWT_bidirectional = GBWT_is_index_bidirectional ;
+extern "C" runStats GBWT_runs   (void* GBWT);
+extern "C" uint64_t GBWT_size(void* GBWT);
+extern "C" uint64_t GBWT_sequences(void* GBWT);
+extern "C" uint64_t GBWT_sigma(void* GBWT);
+extern "C" uint64_t GBWT_samples(void* GBWT);
+extern "C" uint64_t GBWT_effective(void* GBWT);
+extern "C" size_type  GBWT_effective (void* GBWT) ;
+extern "C" bool GBWT_empty (void* GBWT);
+extern "C" bool GBWT_bidirectional(void* GBWT);
 
 
 

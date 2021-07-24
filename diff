@@ -132,12 +132,12 @@
 77d61
 < //methods
 79a64,71
-> extern "C" runStats GBWT_number_of_GWT_runs   (void* GBWT);
-> extern "C" uint64_t GBWT_total_path_length(void* GBWT);
-> extern "C" uint64_t GBWT_number_of_paths(void* GBWT);
-> extern "C" uint64_t GBWT_alphabet_size(void* GBWT);
-> extern "C" uint64_t GBWT_number_of_samples(void* GBWT);
-> extern "C" uint64_t GBWT_effective_alphabet_size(void* GBWT);
+> extern "C" runStats GBWT_runs   (void* GBWT);
+> extern "C" uint64_t GBWT_size(void* GBWT);
+> extern "C" uint64_t GBWT_sequences(void* GBWT);
+> extern "C" uint64_t GBWT_sigma(void* GBWT);
+> extern "C" uint64_t GBWT_samples(void* GBWT);
+> extern "C" uint64_t GBWT_effective(void* GBWT);
 > extern "C" bool GBWT_has_empty_index (void* GBWT);
 > extern "C" bool GBWT_is_index_bidirectional(void* GBWT);
 82c74,81
@@ -145,24 +145,24 @@
 ---
 > extern "C" runStats GBWT_runs (void* GBWT);
 > extern "C" uint64_t GBWT_size  (void* GBWT);
-> extern "C" uint64_t GBWT_sequences (void* GBWT);
+> extern "C" uint64_t GBWT_sigma (void* GBWT);
 > extern "C" uint64_t GBWT_sigma (void* GBWT);
 > extern "C" uint64_t GBWT_samples(void* GBWT);
 > extern "C" uint64_t GBWT_effective(void* GBWT);
-> extern "C" bool GBWT_empty (void* GBWT);
-> extern "C" bool GBWT_bidirectional (void* GBWT);
+> extern "C" bool GBWT_has_empty_index (void* GBWT);
+> extern "C" bool GBWT_is_index_bidirectional (void* GBWT);
 84,86d82
 <         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
 <         return gbwt->empty();
 < }
 88,92d83
-< size_type GBWT_number_of_paths(void* GBWT)
+< size_type GBWT_sequences(void* GBWT)
 <         {
 <         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
 <         return gbwt->sequences();
 < }
 94d84
-< size_type GBWT_alphabet_size(void* GBWT)
+< size_type GBWT_sigma(void* GBWT)
 96,99c86,87
 <         {
 <         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
@@ -184,7 +184,7 @@
 >         uint64_t second;
 > };
 108c95,98
-< size_type GBWT_number_of_samples(void* GBWT)
+< size_type GBWT_samples(void* GBWT)
 ---
 > struct runStats{
 >         uint64_t concreteRuns;
@@ -213,7 +213,7 @@
 >    void* sequence_source_ref;
 > };
 122,130d110
-< runStats GBWT_number_of_GWT_runs  (void* GBWT)
+< runStats GBWT_runs  (void* GBWT)
 <         {
 <         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
 <         std::pair<size_type, size_type>  runs = gbwt->runs();
@@ -262,7 +262,7 @@
 <         *tmp = state->forward;
 < }
 ---
-> extern "C" bool GBWT_empty (void*);
+> extern "C" bool GBWT_has_empty_index (void*);
 > extern "C" void  GBWT_flip_state(void*);
 161c126,129
 < void BI_SEARCHSTATE_backward (CBidirectionalSearchState  out,  CBidirectionalSearchState cstate){
@@ -295,7 +295,7 @@
 174d143
 < }
 176c145
-< size_type GBWT_total_path_length (void * GBWT) {
+< size_type GBWT_size (void * GBWT) {
 ---
 > extern "C" gbwtSequenceSourcePair  GBWTGRAPH_gfa_to_gbwt(char* gfa_filename  );
 178,179c147
@@ -545,13 +545,13 @@
 < 
 < 
 < 
-< auto GBWT_runs = GBWT_number_of_GWT_runs  ;
-< auto GBWT_size = GBWT_total_path_length ;
-< auto GBWT_sequences = GBWT_number_of_paths  ;
-< auto GBWT_sigma = GBWT_alphabet_size ;
-< auto GBWT_samples = GBWT_number_of_samples ;
-< auto GBWT_effective = GBWT_effective_alphabet_size ;
-< auto GBWT_empty = GBWT_has_empty_index   ;
-< auto GBWT_bidirectional = GBWT_is_index_bidirectional ;
+< auto GBWT_runs = GBWT_runs  ;
+< auto GBWT_size = GBWT_size ;
+< auto GBWT_sigma = GBWT_sequences  ;
+< auto GBWT_sigma = GBWT_sigma ;
+< auto GBWT_samples = GBWT_samples ;
+< auto GBWT_effective = GBWT_effective ;
+< auto GBWT_has_empty_index = GBWT_has_empty_index   ;
+< auto GBWT_is_index_bidirectional = GBWT_is_index_bidirectional ;
 ---
 > extern "C" void  BI_SEARCHSTATE_delete ();

@@ -79,46 +79,46 @@ void  GBWT_delete (void * GBWT) {
 
 
 
-bool GBWT_has_empty_index (void * GBWT) {
+bool GBWT_empty (void * GBWT) {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->empty();
 }
 
-size_type GBWT_number_of_paths(void* GBWT)
+size_type GBWT_sequences(void* GBWT)
         {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->sequences();
 }
 
-size_type GBWT_alphabet_size(void* GBWT)
+size_type GBWT_sigma(void* GBWT)
 
         {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->sigma();
 }
 
-size_type GBWT_effective_alphabet_size(void* GBWT)
+size_type GBWT_effective(void* GBWT)
 
         {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->effective();
 }
 
-size_type GBWT_number_of_samples(void* GBWT)
+size_type GBWT_samples(void* GBWT)
 
         {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->samples();
 }
 
-bool GBWT_is_index_bidirectional(void* GBWT)
+bool GBWT_bidirectional(void* GBWT)
 
         {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->bidirectional();
 }
 
-runStats GBWT_number_of_GWT_runs  (void* GBWT)
+runStats GBWT_runs  (void* GBWT)
         {
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         std::pair<size_type, size_type>  runs = gbwt->runs();
@@ -171,7 +171,7 @@ size_type SEARCHSTATE_size(CSearchState cstate) {
 
 }
 
-size_type GBWT_total_path_length (void * GBWT) {
+size_type GBWT_size (void * GBWT) {
 
         gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
         return gbwt->size();
@@ -408,6 +408,8 @@ void BI_SEARCHSTATE_delete  (void* state)
 }
 
 
+
+// void (*g)() = &bar::f;
 
 
 

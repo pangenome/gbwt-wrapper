@@ -33,27 +33,19 @@ typedef std::pair<size_type, size_type>   sample_type;  // (i, DA[i]) within a r
 
 
 extern "C" void* DGBWT_new(void);
-
 extern "C" void* DGBWT_to_GBWT(void* dynGBWT);
-
 extern "C" void GBWT_delete(void* GBWT);
 extern "C" void DGBWT_delete(void* dynGBWT);
-
 extern "C" void* DGBWT_to_GBWT(void* dynGBWT);
 
 text_type stringToText (void* text);
 void* insertGBWTSequence(void* dynGBWT, text_type& text);
 
 extern "C" void* DGBWT_insert(void* dynGBWT, void* text);
-
 extern "C" node_type   GBWT_first_node(void* GBWT);
-
-extern "C"  void  GBWT_find (void* GBWT, CSearchState out,  node_type node);
-
+extern "C" void  GBWT_find (void* GBWT, CSearchState out,  node_type node);
 extern "C" void GBWT_bi_find (void* GBWT,  CBidirectionalSearchState out,node_type node);
-
-extern "C"  void  GBWT_SEARCHSTATE_extend   (void* GBWT,  CSearchState  out , CSearchState state, node_type node);
-
+extern "C" void  GBWT_SEARCHSTATE_extend   (void* GBWT,  CSearchState  out , CSearchState state, node_type node);
 extern "C" void  GBWT_BI_SEARCHSTATE_extend_forward (void* GBWT, CBidirectionalSearchState out,  CBidirectionalSearchState state, node_type node);
 extern "C" void  GBWT_BI_SEARCHSTATE_extend_backward (void* GBWT,  CBidirectionalSearchState out, CBidirectionalSearchState state, node_type node);
 
@@ -93,7 +85,7 @@ extern "C" uint64_t GBWT_sequences(void* GBWT);
 extern "C" uint64_t GBWT_sigma(void* GBWT);
 extern "C" uint64_t GBWT_samples(void* GBWT);
 extern "C" uint64_t GBWT_effective(void* GBWT);
-extern "C" size_type  GBWT_effective (void* GBWT) ;
+// extern "C" size_type  GBWT_effective (void* GBWT) ;
 extern "C" bool GBWT_empty (void* GBWT);
 extern "C" bool GBWT_bidirectional(void* GBWT);
 
@@ -128,6 +120,19 @@ extern "C" size_type GBWT_LF_next_offset_from_position (void * GBWT, CPair posit
 extern "C" CPair GBWT_LF_range_of_successors_from_node(void * GBWT, node_type from, CPair  range, node_type to);
 extern "C" CPair GBWT_LF_range_of_successors_from_search_state(void * GBWT, CSearchState state, node_type to);
 
+//NODES
+
+
+extern "C" size_type NODE_id (void*,node_type) ;
+extern "C" bool NODE_is_reverse (void*,node_type) ;
+extern "C" node_type NODE_encode  (void*,size_type,bool)   ;
+extern "C" node_type NODE_reverse (void*,node_type) ;
+
+//PATHS
+extern "C" size_type PATH_id(void* path_, size_type path) ;
+extern "C" bool PATH_is_reverse(void* path_,size_type path) ;
+extern "C" size_type PATH_encode(void* path_,size_type path_id, bool reversed);
+extern "C" size_type PATH_reverse(void* path_,size_type path) ;
 
 extern "C" gbwtSequenceSourcePair  GBWTGRAPH_gfa_to_gbwt(char* gfa_filename  );
 

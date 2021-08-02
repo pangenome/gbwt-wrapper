@@ -412,4 +412,50 @@ void BI_SEARCHSTATE_delete  (void* state)
 // void (*g)() = &bar::f;
 
 
+//nodes
+size_type NODE_id (void* the_node,node_type the_node_type){
+        gbwt::Node*  tmp_node =  (gbwt::Node*) the_node ;
+        return tmp_node->id(the_node_type) ;
+}
 
+bool NODE_is_reverse (void* the_node,node_type the_node_type){
+
+        gbwt::Node*  tmp_node =  (gbwt::Node*) the_node ;
+        return tmp_node->is_reverse(the_node_type);
+}
+node_type NODE_encode  (void* the_node,size_type the_node_id,bool is_reversed ){
+        gbwt::Node*  tmp_node =  (gbwt::Node*) the_node ;
+        return tmp_node-> encode(the_node_id, is_reversed);
+
+}
+node_type NODE_reverse (void* the_node,node_type the_node_type){
+
+        gbwt::Node*  tmp_node =  (gbwt::Node*) the_node ;
+        return    tmp_node->reverse(the_node_type) ;
+}
+
+
+
+size_type PATH_id(void* path_, size_type path)     {
+
+        gbwt::Path*  tmp_path=  (gbwt::Path*) path_;
+           return tmp_path->id(path);
+}
+bool PATH_is_reverse(void* path_,size_type path)
+{
+        gbwt::Path*  tmp_path=  (gbwt::Path*) path_;
+
+           return tmp_path->is_reverse(path);
+}
+size_type PATH_encode(void* path_,size_type path_id, bool reversed)
+
+{
+        gbwt::Path*  tmp_path=  (gbwt::Path*) path_;
+
+           return tmp_path->encode(path_id, reversed);
+}
+size_type PATH_reverse(void* path_,size_type path)
+{
+        gbwt::Path*  tmp_path=  (gbwt::Path*) path_;
+           return tmp_path->reverse(path);
+}

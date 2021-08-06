@@ -26,7 +26,7 @@ text_type stringToText (void* text)
         int* tmp =   (int*) text  ;
         str_vector.width(8);
         while(string_end == 0) {
-                if (tmp[string_index] == NULL) {
+                if (!tmp[string_index]) {
                         string_end=1;
                 }
                 else {

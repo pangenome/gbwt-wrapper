@@ -282,12 +282,13 @@ size_type GBWT_node_size(void * GBWT,  node_type node) {
 }
 
 
+
 CPair* GBWT_edges(void * GBWT,  node_type from ){
          gbwt::GBWT* gbwt = (gbwt::GBWT *)GBWT;
          std::vector<edge_type> tmp_A = gbwt->edges(from);
          CPair* tmp_B =  (CPair*) malloc(sizeof(CPair) * tmp_A.size());
 
-         for (size_t i=0;i != tmp_A.size(); i++) // access by reference to avoid copying
+         for (size_t i=0;i != tmp_A.size(); i++)
           {
                   tmp_B[i].first=  tmp_A.at(i).first;
                   tmp_B[i].second=  tmp_A.at(i).second;
@@ -459,3 +460,50 @@ size_type PATH_reverse(void* path_,size_type path)
         gbwt::Path*  tmp_path=  (gbwt::Path*) path_;
            return tmp_path->reverse(path);
 }
+
+
+void GBWT_start(void* GBWT, size_type sequence, void* return_value )  {
+
+        gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
+        std::pair<size_type, size_type>  start = gbwt->start(sequence);
+        CPair* tmp = (CPair*) return_value;
+        tmp->first =  start.first   ;
+        tmp->second =  start.second ;
+}
+
+size_type GBWT_tryLocate(void* GBWT, node_type node, size_type i){
+        gbwt::GBWT* gbwt = (gbwt::GBWT *) GBWT;
+        return   gbwt->tryLocate(node, i);
+
+}
+
+
+
+//
+// Sequences
+// These queries convert between positions and path identifiers. Errors are expressed with invalid_edge() and invalid_sequence().
+//
+// edge_type start(size_type sequence) const: The position for the start of path sequence.
+// size_type tryLocate(node_type node, size_type i) const: The sampled path identifier at node node, record offset i or invalid_sequence() if there is no sample.
+// size_type tryLocate(edge_type position) const: As above.
+//  Pages 18
+// Find a Page…
+// Home
+// Cached GBWT
+// Construction Benchmarks
+// Construction Interface
+// Data Model
+// Data Types
+// Fast Locate
+// File Formats
+// GBWT Merging
+// Global Settings
+// Haplotype Generation
+// Identifiers
+// Metadata
+// Other Ideas
+// Query Interface
+// Clone this wiki locally
+// https://github.com/jltsiren/gbwt.wiki.git
+//
+//

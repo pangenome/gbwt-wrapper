@@ -136,6 +136,15 @@ extern "C" size_type PATH_reverse(void* path_,size_type path) ;
 
 extern "C" gbwtSequenceSourcePair  GBWTGRAPH_gfa_to_gbwt(char* gfa_filename  );
 
+//sequences
+// These queries convert between positions and path identifiers. Errors are expressed with invalid_edge() and invalid_sequence().
+
+
+
+extern "C" void GBWT_start(void* GBWT, size_type sequence, void* return_value );
+
+extern "C" size_type GBWT_tryLocate(void* GBWT, node_type node, size_type i);// const: The sampled path identifier at node node, record offset i or invalid_sequence() if there is no sample.
+
 extern "C" int SEARCHSTATE_sizeof (void);
 
 extern "C" int BI_SEARCHSTATE_sizeof (void);
@@ -150,3 +159,34 @@ extern "C" void  BI_SEARCHSTATE_delete (void*);
 
 // extern "C" bool GBWT_is_index_bidirectional(void* GBWT);
 
+
+
+
+
+// GBWTGraph::for_each_handle_impl(const std::function<bool(const handle_t&)>& iteratee, bool parallel) const
+// {
+//   if(parallel)
+//   {
+//     #pragma omp parallel for schedule(dynamic, CHUNK_SIZE)
+//     for(gbwt::node_type node = this->index->firstNode(); node < this->index->sigma(); node += 2)
+//     {
+//       if(!(this->real_nodes[this->node_offset(node) / 2])) { continue; }
+//       if(!iteratee(node_to_handle(node)))
+//       {
+//         // We should stop early but it's not worth the effort.
+//       }
+//     }
+//   }
+//   else
+//   {
+//     for(gbwt::node_type node = this->index->firstNode(); node < this->index->sigma(); node += 2)
+//     {
+//       if(!(this->real_nodes[this->node_offset(node) / 2])) { continue; }
+//       if(!iteratee(node_to_handle(node))) { return false; }
+//     }
+//   }
+//
+//   return true;
+// }
+//
+// size_t

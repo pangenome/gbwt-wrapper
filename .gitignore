@@ -1,3 +1,5 @@
+
+.ccls-cache/**
 libgbwt.a
 libgbwtgraph.a
 libhandlegraph.a

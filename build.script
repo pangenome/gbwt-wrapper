@@ -1,5 +1,5 @@
 #!/bin/env bash
 
-gcc -c -fPIC gbwt_wrapper.cpp; g++ -o libgbwtwrapper.so -Wl,--whole-archive /usr/local/lib/libgbwtgraph.a /usr/local/lib/libhandlegraph.a  /usr/local/lib/libsdsl.a  /usr/local/lib/libgbwt.a -Wl,--no-whole-archive -shared gbwt_wrapper.o  -pthread -fopenmp
+gcc -c -fPIC gbwt_wrapper.cpp gbwtgraph_wrapper.cpp; g++ -o libgbwtwrapper.so -Wl,--whole-archive /usr/local/lib/libgbwtgraph.a /usr/local/lib/libhandlegraph.a  /usr/local/lib/libsdsl.a  /usr/local/lib/libgbwt.a -Wl,--no-whole-archive -shared gbwt_wrapper.o  -pthread -fopenmp
 
 
